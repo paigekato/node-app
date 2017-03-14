@@ -9,18 +9,24 @@ var urlDatabase = {
   "9sm5xK": "http://wwww.google.com"
 };
 
-app.get("/", (request, response) => {
-  response.end("HELLO PEASANTS!");
+app.get("/", (req, res) => {
+  res.end("HELLO PEASANTS!");
 });
 
-app.get("/urls.json", (request, response) => {
-  response.json(urlDatabase);
+app.get("/urls.json", (req, res) => {
+  res.json(urlDatabase);
 });
 
-app.get("/urls", (request, response) => {
-let templateVars = {urls: urlDatabase};
-  response.render("urls_index", templateVars);
-});
+app.get("/urls", (req, res) => {
+  let templateVars = { urls: urlDatabase };
+  res.render("urls_index", templateVars);
+});//info from files in view
+
+app.get("/urls/:id", (req, res) => {
+  let templateVars = { shortURL: require.params.id, urls: urlDatabase };
+  res.render("urls_show", templateVars)
+  });
+
 
 app.listen(PORT, () => {
   console.log(`${PORT} is the magic port.`);

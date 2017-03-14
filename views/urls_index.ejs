@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+
+  <title>Paige's TinyApp</title>
+
+<head>
+  <% include ../views/partials/_header %>
+</head>
+
+  <body>
+    <ul><% for(prop in urls) { %>
+    <li><%= prop %> - <%= urls[prop] %></li>
+    <% }; %>
+  </body>
+
+</html>
