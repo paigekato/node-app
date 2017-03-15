@@ -1,4 +1,20 @@
-<meta charset="UTF-8">
-<head>
-  <% include ../views/partials/_header %>
-</head>
+<!DOCTYPE html>
+
+<html lang="en">
+
+
+  <body style="font-size:20px; padding:50px;">
+    <% include partials/_header %>
+
+    <form action="/urls/<%= shortURL %>" method="POST" style="margin:150px;">
+
+      <label for="longURL"> <%= shortURL%> </label>
+
+      <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
+
+      <input type="submit" value="Update URL" >
+
+    </form>
+
+  </body>
+</html>

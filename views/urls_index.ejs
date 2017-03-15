@@ -4,14 +4,40 @@
 
   <title>Paige's TinyApp</title>
 
+  <head></head>
+  <style>
+
+  </style>
+
+
+
 <head>
   <% include ../views/partials/_header %>
 </head>
 
   <body>
-    <ul><% for(prop in urls) { %>
-    <li><%= prop %> - <%= urls[prop] %></li>
+
+    <% for(prop in urls) { %>
+
+
+    <form method="POST" action="/urls/<%= prop %>/delete">
+    <%= prop %> - <%= urls[prop] %>
+
+    <input type="submit" value="Delete" >
+
+    </form>
+
+    <form method="POST" action="/urls/<%= prop %>">
+    <input type="submit" value="Edit" >
+
+    </form>
+
     <% }; %>
   </body>
+  <footer>
+
+    <a href="/urls/<%= prop %>">URLS</a>
+
+    <% include ../views/partials/_footer %>
 
 </html>
