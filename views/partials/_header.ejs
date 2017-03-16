@@ -1,20 +1,13 @@
+  <title>Paige's TinyApp</title>
 <font face="sans-serif" color="grey" size="6">Paige's TinyApp</font> <br>
 
-
-<% if(!username) { %>
-<form action="/login" method="POST">
-<label for="longURL">Username: <%= username %>  </label> <br>
-<input id="username" type="text" name="username" placeholder="Please enter username">
-<input type="submit" value="Submit">
+<a href="/register">Register</a>
+<% if(!user) { %>
+No user
 
 
 <% } else { %>
-
+User!
 
  <% }  %>
-
-<form action="/logout" method="POST">
-
-<input type="submit" value="Logout">
-</form>
 <br><br>
