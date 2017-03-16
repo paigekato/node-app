@@ -1,13 +1,31 @@
   <title>Paige's TinyApp</title>
-<font face="sans-serif" color="grey" size="6">Paige's TinyApp</font> <br>
+<font face="sans-serif" color="grey" size="10">Paige's TinyApp</font> <br>
 
-<a href="/register">Register</a>
+<style>
+form {
+    display: inline;
+
+
+</style>
+
 <% if(!user) { %>
-No user
+
+<form action="/register">
+    <input type="submit" value="Register">
+</form>
+
+<form action="/login">
+    <input type="submit" value="Login">
+</form>
+
 
 
 <% } else { %>
-User!
 
+
+
+<form action="/logout" method="POST">
+<input type="submit" value="Logout" >
+</form></right>
  <% }  %>
 <br><br>

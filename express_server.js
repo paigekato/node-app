@@ -69,6 +69,7 @@ app.post("/urls", (req, res) => {
 
 //redirecting short urls to longurls
 app.get("/u/:shortURL", (req, res) => {
+  let templateVars = { user: users[res.cookie("user_id")] };
   if(!urlDatabase[req.params.shortURL]) {
     res.status(400).redirect("https://http.cat/404");
   } else {
@@ -114,14 +115,10 @@ app.post("/login", (req, res) => {
   }
  });
 
-
-
-//login/logout function
-// app.post("/logout", (req, res) => {
-
-//   res.clearCookie("username");
-//   res.redirect("/urls");
-// });
+app.post("/logout", (req, res) => {
+   res.clearCookie("user_id");
+   res.redirect("/urls");
+ });
 
 //renders user_reg
 app.get("/register", (req, res) => {
@@ -136,11 +133,11 @@ app.post("/register", (req, res) => {
   } else {
   var randomID = generateRandomString();
   users[randomID] = { id: randomID, email: req.body.email, password: req.body.password };
-  // console.log(users);
   res.cookie("user_id", randomID);
   res.redirect("/urls"); //change?
   };
 });
+
 
 
 
