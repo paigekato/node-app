@@ -10,7 +10,7 @@
       <% for(key in authorizedURLS) { %>
         <form method="POST" action="/urls/<%= key %>/delete">
           <br>
-          <%= key %> - <%= authorizedURLS[key].url %> - <%= authorizedURLS[key].id %>
+          <%= key %> - <%= authorizedURLS[key].url %>
           <input type="submit" value="Delete" >
         </form>
         <form method="POST" action="/urls/<%= key %>">
@@ -25,6 +25,7 @@
 
 
     <% } else { %>
+
       <p>You are not signed in. Please login or Register</p>
     <% } %>
   </body>
