@@ -1,43 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-<meta charset="UTF-8">
-
-
-
-  <head></head>
-  <style>
-
-  </style>
-
-
-
-<head>
-  <% include ../views/partials/_header %>
-</head>
-
+  <head>
+    <meta charset="UTF-8">
+    <title>Paige's TinyApp</title>
+  </head>
   <body>
+    <% include ../views/partials/_header %>
+    <% if(loggedIn) { %>
+      <% for(key in authorizedURLS) { %>
+        <form method="POST" action="/urls/<%= key %>/delete">
+          <br>
+          <%= key %> - <%= authorizedURLS[key].url %> - <%= authorizedURLS[key].id %>
+          <input type="submit" value="Delete" >
+        </form>
+        <form method="POST" action="/urls/<%= key %>">
+          <input type="submit" value="Edit" >
+        </form>
+      <% } // end for loop %>
 
-    <% for(prop in urls) { %>
+      <br><br><br>
+      <form action="/url/new">
+    <input type="submit" value="Create a TinyURL">
 
 
-    <form method="POST" action="/urls/<%= prop %>/delete">
-    <%= prop %> - <%= urls[prop] %>
 
-    <input type="submit" value="Delete" >
-
-    </form>
-
-    <form method="POST" action="/urls/<%= prop %>">
-    <input type="submit" value="Edit" >
-    <br>
-    </form>
-
-    <% }; %>
+    <% } else { %>
+      <p>You are not signed in. Please login or Register</p>
+    <% } %>
   </body>
-  <footer>
-
-    <a href="/url/new">Create a new URL</a>
-
-
-
 </html>
