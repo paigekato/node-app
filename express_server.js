@@ -17,15 +17,6 @@ function generateRandomString() {
   return r;
 }
 
-function urlsForUser(id) {
-  var userURLS = {};
-  for(shortURLS in urlDatabase) {
-    if(urlDatabase[shortURLS]["id"] === id) {
-      userURLS[shortURLS] = urlDatabase[shortURLS];
-    }
-  }
-  return userURLS;
-};
 
 
 app.set("view engine", "ejs");
@@ -42,6 +33,16 @@ var urlDatabase = {
   }
 };
 
+function urlsForUser(id) {
+  var userURLS = {};
+  for(shortURLS in urlDatabase) {
+    if(urlDatabase[shortURLS]["id"] === id) {
+      userURLS[shortURLS] = urlDatabase[shortURLS];
+    }
+  }
+  return userURLS;
+}
+
 var users = {
   "userRandomID": {
     id: "userRandomID",
@@ -51,7 +52,7 @@ var users = {
 };
 
 app.get("/", (req, res) => {
-  res.redirect("/url/new")
+  res.redirect("/url/new");
 });
 
 app.get("/urls/:id", (req, res) => {
@@ -75,7 +76,7 @@ app.get("/urls", (req, res) => {
   if(loggedIn) {
     res.render("urls_index", templateVars);
   } else {
-      res.render("urls_index", templateVars);
+    res.render("urls_index", templateVars);
   }
 });//info from files in view
 
@@ -87,12 +88,12 @@ app.get("/url/new", (req, res) => {
     if(req.cookies["user_id"] === users[id].id) {
       loggedIn = true;
     }
-  };
+  }
   if(loggedIn) {
     res.render("urls_new", templateVars);
   } else {
-      res.redirect("/login");
-    }
+    res.redirect("/login");
+  }
 });
 
 //creating random string from new url in form POST
@@ -102,11 +103,9 @@ app.post("/urls", (req, res) => {
     res.redirect("/url/new");
   } else {
       // var ownUserURLS =  urlsForUser(users[id].id);
-
-       urlDatabase[newShortURL] = { id: req.cookies["user_id"], url: req.body.longURL };
-
-       res.redirect("urls");
-    }
+    urlDatabase[newShortURL] = { id: req.cookies["user_id"], url: req.body.longURL };
+    res.redirect("urls");
+  }
 });
 //%{newShortURL
 
@@ -147,21 +146,21 @@ app.post("/login", (req, res) => {
   var foundUser = false;
   for(var id in users) {
     if(req.body.email === users[id].email && req.body.password === users[id].password) {
-        res.cookie("user_id", users[id].id);
-        foundUser = true;
+      res.cookie("user_id", users[id].id);
+      foundUser = true;
     }
-  };
+  }
   if(foundUser) {
     res.redirect("/urls");
   } else {
     res.status(403).redirect("https://http.cat/403");
   }
- });
+});
 
 app.post("/logout", (req, res) => {
-   res.clearCookie("user_id");
-   res.redirect("/urls");
- });
+  res.clearCookie("user_id");
+  res.redirect("/urls");
+});
 
 //renders user_reg
 app.get("/register", (req, res) => {
@@ -174,11 +173,11 @@ app.post("/register", (req, res) => {
   if(req.body.email === "" || req.body.password === "") {
     res.status(400).redirect("https://http.cat/404");
   } else {
-  var randomID = generateRandomString();
-  users[randomID] = { id: randomID, email: req.body.email, password: req.body.password };
-  res.cookie("user_id", randomID);
-  res.redirect("/urls"); //change?
-  };
+    var randomID = generateRandomString();
+    users[randomID] = { id: randomID, email: req.body.email, password: req.body.password };
+    res.cookie("user_id", randomID);
+    res.redirect("/urls"); //change?
+  }
 });
 
 
