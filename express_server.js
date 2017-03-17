@@ -1,12 +1,12 @@
-var express = require("express");
-var app = express();
-var PORT = process.env.PORT || 8080; //default port 8080
-var cookieParser = require('cookie-parser');
+const express = require("express");
+const app = express();
+const PORT = process.env.PORT || 8080; //default port 8080
+const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");
+const bcrypt = require('bcrypt');
 
 app.use(bodyParser.urlencoded({extended: true}));
 //allows us to access POST request parameters
-
 
 function generateRandomString() {
   var r = "";
@@ -16,8 +16,6 @@ function generateRandomString() {
   }
   return r;
 }
-
-
 
 app.set("view engine", "ejs");
 app.use(cookieParser());
@@ -52,6 +50,7 @@ var users = {
 };
 
 app.get("/", (req, res) => {
+  console.log(users);
   res.redirect("/url/new");
 });
 
@@ -139,13 +138,35 @@ app.get("/login", (req, res) => {
   res.render("user_login", templateVars);
 });
 
+//renders user_reg
+app.get("/register", (req, res) => {
+  let templateVars = { urls: urlDatabase, user: users[req.cookies["user_id"]] };
+  res.render("usr_register", templateVars);
+});
+
+//posting form info register information
+app.post("/register", (req, res) => {
+  var userPassword = req.body.password;
+  var hashedPassword = bcrypt.hashSync(userPassword, 10);
+  if(req.body.email === "" || req.body.password === "") {
+    res.status(400).redirect("https://http.cat/404");
+  } else {
+    var randomID = generateRandomString();
+    users[randomID] = { id: randomID, email: req.body.email, password: hashedPassword };
+    res.cookie("user_id", randomID);
+    res.redirect("/urls");
+  }
+});
+
 app.post("/login", (req, res) => {
   if(req.body.email === "" || req.body.password === "") {
     res.status(400).redirect("https://http.cat/404");
   }
   var foundUser = false;
   for(var id in users) {
-    if(req.body.email === users[id].email && req.body.password === users[id].password) {
+    let userPassword = req.body.password;
+    let hashedPassword = users[req.cookies["user_id"]]["password"];
+    if(req.body.email === users[id].email && bcrypt.compareSync(userPassword, hashedPassword)) {
       res.cookie("user_id", users[id].id);
       foundUser = true;
     }
@@ -158,30 +179,9 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("user_id");
-  res.redirect("/urls");
+  // res.clearCookie("user_id");
+  res.redirect("/login");
 });
-
-//renders user_reg
-app.get("/register", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: users[req.cookies["user_id"]] };
-  res.render("usr_register", templateVars);
-});
-
-// //posting form info register information
-app.post("/register", (req, res) => {
-  if(req.body.email === "" || req.body.password === "") {
-    res.status(400).redirect("https://http.cat/404");
-  } else {
-    var randomID = generateRandomString();
-    users[randomID] = { id: randomID, email: req.body.email, password: req.body.password };
-    res.cookie("user_id", randomID);
-    res.redirect("/urls"); //change?
-  }
-});
-
-
-
 
 app.listen(PORT, () => {
   console.log(`${PORT} is the magic port.`);
