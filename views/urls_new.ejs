@@ -1,33 +1,32 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <title>Paige's TinyApp</title>
-<font face="sans-serif" color="grey" size="10">Paige's TinyApp</font> <br>
-<br><br>
-
+  <font face="sans-serif" color="grey" size="10">Paige's TinyApp</font> <br/>
+  <br/><br/>
   <body style="font-size:20px; padding:50px;">
+    <% if(loggedIn) { %>
+      <form action="/register">
+        <input type="submit" value="Register">
+      </form>
+      <form action="/login">
+        <input type="submit" value="Login">
+      </form>
+      <form action="/urls" method="POST">
+        <label for="longURL"> Please Enter a URL: </label><br/>
+        <input id="longURL" type="text" name="longURL" placeholder="http://www." style="width: 300px">
+        <input type="submit" value="Submit" > <br/>
+        <% } else { %>
 
+          <form action="/logout" method="POST">
+            <input type="submit" value="Logout" >
+          </form></right>
+        <% }  %>
+        <br/><br/>
 
-
-
-
-    <form action="/urls" method="POST">
-
-      <label for="longURL"> Please Enter a URL: </label><br>
-
-      <input id="longURL" type="text" name="longURL" placeholder="http://www." style="width: 300px">
-
-      <input type="submit" value="Submit" > <br>
-
-<br><br>
-
-    <form action="/urls">
-      <input type="submit" value="Back to Main">
-    </form>
-
-
-
-    </form>
-
+  <br/><br/>
+      <form action="/urls">
+        <input type="submit" value="Back to Main">
+      </form>
+      </form>
   </body>
 </html>

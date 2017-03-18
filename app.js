@@ -1,5 +1,3 @@
-//1247
-
 const http = require("http");
 const PORT = 8080;
 

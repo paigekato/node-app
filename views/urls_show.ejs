@@ -1,22 +1,31 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
-
   <body style="font-size:20px; padding:50px;">
     <% include partials/_header %>
-
-    <form action="/urls/<%= shortURL %>" method="POST" style="display:inline">
-
-      <label for="longURL">Short URL: <%= shortURL%> </label>
-
-      <input id="longURL" type="text" name="longURL" placeholder="http://" style="inline">
-
+    <% if(loggedIn) { %>
+      <form action="/register">
+       <input type="submit" value="Register">
+      </form>
+      <form action="/login">
+        <input type="submit" value="Login">
+      </form>
+      <form action="/urls/<%= shortURL %>" method="POST" style="display:inline">
+        <label for="longURL">Short URL: <%= shortURL%> </label>
+         <input id="longURL" type="text" name="longURL" placeholder="http://" style="inline">
       <input type="submit" value="Update URL" >
-      <br>
+      <br/><br/>
+
       <a href ="/urls"> Back to Main </a>
+      <% } else { %>
+        <form action="/register">
+          <input type="submit" value="Register">
+        </form>
+        <form action="/login">
+         <input type="submit" value="Login">
+        </form>
+         <p>You are not signed in. Please login or Register</p>
 
+      <% } %>
     </form>
-
   </body>
 </html>

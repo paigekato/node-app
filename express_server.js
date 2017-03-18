@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 app.use(bodyParser.urlencoded({extended: true}));
 //allows us to access POST request parameters
 
-app.use(cookieSession ({
+app.use(cookieSession({
   name: 'session',
   secret: "secret"
 }));
@@ -46,6 +46,7 @@ function urlsForUser(id) {
   return userURLS;
 }
 
+
 var users = {
   "userRandomID": {
     id: "userRandomID",
@@ -54,105 +55,118 @@ var users = {
   }
 };
 
-app.get("/", (req, res) => {
-  res.redirect("/url/new");
-});
-
-app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id, urls: urlDatabase, user: req.session.user_id };
-  res.render("urls_show", templateVars); //get req RENDER/post redirects
-});
-
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-app.get("/urls", (req, res) => {
-  var loggedIn = false;
-  for(var id in users) {
-    if(req.session.user_id === id) {
-      loggedIn = true;
-    }
-  }
-  let authorizedURLS = urlsForUser(req.session.user_id);
-  let templateVars = { authorizedURLS, user: req.session.user_id, loggedIn };
-  if(loggedIn) {
-    res.render("urls_index", templateVars);
-  } else {
-    res.render("urls_index", templateVars);
-  }
-});//info from files in view
-
-//for to retreive GET
-app.get("/url/new", (req, res) => {
-  let templateVars = { user: req.session.user_id };
-  var loggedIn = false;
-  for(var id in users) {
-    if(req.session.user_id === users[id].id) {
-      loggedIn = true;
-    }
-  }
-  if(loggedIn) {
-    res.render("urls_new", templateVars);
-  } else {
+app.get("/", (req, res) => {
+  if(!users.hasOwnProperty(req.session.user_id)) {
     res.redirect("/login");
+  } else {
+    res.redirect("/url/new");
   }
 });
 
-//creating random string from new url in form POST
+app.get("/urls/:id", (req, res) => {
+  for(var keys in users) {
+    if(users.hasOwnProperty(req.session.user_id)) {
+      res.status(401).redirect("/error");
+    } else {
+      let loggedIn = true;
+      let authorizedURLS = urlsForUser(req.session.user_id);
+      let templateVars = { shortURL: req.params.id, user: req.session.user_id, loggedIn, authorizedURLS };
+      res.status(200);
+      res.render("urls_show", templateVars);
+    }
+  }
+});
+
+app.get("/urls", (req, res) => {
+    let loggedIn = true;
+    let authorizedURLS = urlsForUser(req.session.user_id);
+    let templateVars = { authorizedURLS, user: req.session.user_id, loggedIn };
+    if(!req.session.user_id) {
+      res.redirect("/error");
+    } else {
+      res.status(200);
+      res.render("urls_index", templateVars);
+    }
+});
+
+app.get("/url/new", (req, res) => {
+  if(req.session.user_id) {
+  let loggedIn = true;
+  let templateVars = { user: req.session.user_id, loggedIn };
+  res.render("urls_new", templateVars );
+  } else {
+    res.redirect("/error");
+  }
+});
+
 app.post("/urls", (req, res) => {
   var newShortURL = generateRandomString();
   if(req.body.longURL === "") {
     res.redirect("/url/new");
   } else {
     urlDatabase[newShortURL] = { id: req.session.user_id, url: req.body.longURL };
-    res.redirect("urls");
+    res.redirect("/urls");
   }
 });
-//%{newShortURL
 
-//redirecting short urls to longurls
 app.get("/u/:shortURL", (req, res) => {
   let templateVars = { user: req.session.user_id };
+  let currentUser = req.session.user_id;
   if(!urlDatabase[req.params.shortURL]) {
-    res.status(400).redirect("https://http.cat/404");
-  } else {
+    res.status(404).redirect("/error");
+  } else if (users[currentUser] != urlDatabase[req.params.shortURL].id) {
+      res.status(403).redirect("https://http.cat/403");
+    } else {
     let longURL = urlDatabase[req.params.shortURL];
     res.redirect(longURL);
-  }
+    }
 });
 
-//delete
+app.get("/error", (req, res) => {
+  let loggedIn = true;
+  let authorizedURLS = urlsForUser(req.session.user_id);
+  let templateVars = { authorizedURLS, user: req.session.user_id, loggedIn };
+    res.status(200);
+    res.render("urls_error", templateVars);
+});
+
 app.post("/urls/:id/delete", (req, res) => {
   delete urlDatabase[req.params.id];
   res.redirect("/urls");
 });
 
-//updating URLS once a submit UPDATE request should modify corresponding
-// longURLS and redirect back to /urls
 app.post("/urls/:id", (req, res) => {
   urlDatabase[req.params.id] = req.body.longURL;
   res.redirect("/urls/" + req.params.id);
 });
 
-//for login info COOKIES
 app.get("/login", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: req.session.user_id };
-  res.render("user_login", templateVars);
+  if(req.session.user_id) {
+    res.redirect("/urls/new");
+  } else {
+    let templateVars = { urls: urlDatabase, user: req.session.user_id };
+    res.render("user_login");
+  }
 });
 
-//renders user_reg
 app.get("/register", (req, res) => {
   let templateVars = { urls: urlDatabase, user: req.session.user_id };
-  res.render("usr_register", templateVars);
+  if(users.hasOwnProperty(req.session.user_id)) {
+    res.redirect("/urls");
+  } else {
+    res.render("usr_register", templateVars);
+  }
 });
 
-//posting form info register information
 app.post("/register", (req, res) => {
   var userPassword = req.body.password;
   var hashedPassword = bcrypt.hashSync(userPassword, 10);
   if(req.body.email === "" || req.body.password === "") {
-    res.status(400).redirect("https://http.cat/404");
+    res.status(400).redirect("https://http.cat/400");
   } else {
     var randomID = generateRandomString();
     users[randomID] = { id: randomID, email: req.body.email, password: hashedPassword };
@@ -163,7 +177,7 @@ app.post("/register", (req, res) => {
 
 app.post("/login", (req, res) => {
   if(req.body.email === "" || req.body.password === "") {
-    res.status(400).redirect("https://http.cat/404");
+    res.status(401).redirect("https://http.cat/401");
   }
   var foundUser = false;
   for(var id in users) {
@@ -172,9 +186,12 @@ app.post("/login", (req, res) => {
     if(req.body.email === users[id].email && bcrypt.compareSync(userPassword, hashedPassword)) {
       req.session.user_id = id;
       foundUser = true;
+    } else {
+      res.status(401).redirect("https://http.cat/401");
     }
   }
   if(foundUser) {
+    res.status(200);
     res.redirect("/urls");
   } else {
     res.status(403).redirect("https://http.cat/403");

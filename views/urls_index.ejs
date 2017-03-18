@@ -5,8 +5,10 @@
     <title>Paige's TinyApp</title>
   </head>
   <body>
-    <% include ../views/partials/_header %>
+  <% include partials/_header %>
     <% if(loggedIn) { %>
+       <form action="/logout" method="POST">
+       <input type="submit" value="Logout" >
       <% for(key in authorizedURLS) { %>
         <form method="POST" action="/urls/<%= key %>/delete">
           <br>
@@ -17,15 +19,10 @@
           <input type="submit" value="Edit" >
         </form>
       <% } // end for loop %>
-
       <br/><br/><br/>
       <form action="/url/new">
     <input type="submit" value="Create a TinyURL">
-
-
-
     <% } else { %>
-
       <p>You are not signed in. Please login or Register</p>
     <% } %>
   </body>
