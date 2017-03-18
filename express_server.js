@@ -163,8 +163,10 @@ app.get("/url/new", (req, res) => {
 //loads url page
 app.get("/urls", (req, res) => {
       let loggedIn = true;
+      let userEmail = users[req.session.user_id].email;
       let authorizedURLS = urlsForUser(req.session.user_id);
       let templateVars = {
+        userEmail,
         urlDatabase,
         authorizedURLS,
         user: req.session.user_id,

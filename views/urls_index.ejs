@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <title>Paige's TinyApp</title>
   </head>
-  <body>
+  <body style="background-color:lightgrey;">
   <% include partials/_header %>
     <% if(loggedIn) { %>
+      <p> Hello <%= userEmail %> ! Welcome to Paige's TinyApp!</p>
        <form action="/logout" method="POST">
        <input type="submit" value="Logout" >
        </form>
