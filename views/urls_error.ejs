@@ -8,7 +8,7 @@ form {
     display: inline;
 }
 </style>
-<% if(!loggedIn) { %>
+<% if(loggedIn) { %>
   <form action="/register">
     <input type="submit" value="Register">
   </form>
@@ -21,7 +21,7 @@ form {
   </form></right>
 <% }  %>
 <br><br>
-  <p>We're sorry. That TinyApp link does not exist. Please return to create that link.</p>
+  <p>We're sorry. You have been redirected here because of an error. Please return to create that link.</p>
   <form action="/login">
     <input type="submit" value="Back to Main">
   </form>
