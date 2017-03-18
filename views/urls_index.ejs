@@ -10,8 +10,11 @@
        <form action="/logout" method="POST">
        <input type="submit" value="Logout" >
        </form>
+       <form action="/urls">
+         <input type="submit" value="My Tinys">
+       </form><br/>
       <% for(key in authorizedURLS) { %>
-          <br>
+          <br/>
           <a href="<%= authorizedURLS[key].url %>"><%= key %></a> - <%= authorizedURLS[key].url %>
           <form method="POST" action="/urls/<%= key %>/delete">
             <input type="submit" value="Delete" >
