@@ -1,35 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+  <html lang="en">
   <body style="font-size:20px; padding:50px; background-color:lightgrey;">
     <% include partials/_header %>
     <% if(loggedIn) { %>
       <form action="/logout" method="POST">
-       <input type="submit" value="Logout" >
+        <input type="submit" value="Logout" >
       </form>
       <form action="/urls">
         <input type="submit" value="My Tinys">
       </form>
-        <br/><br/>
+      <br/><br/>
       <form action="/urls/<%= shortURL %>" method="POST">
         <label for="longURL">Short URL: <%= shortURL%> </label>
          <input id="longURL" type="text" name="longURL" placeholder="http://">
-        <input type="submit" value="Update URL" >
-     </form>
-      <br/><br/>
-
-      <form action="/urls">
-        <input type="submit" value="Back to Main">
+         <input type="submit" value="Update URL" >
       </form>
-      <% } else { %>
-        <form action="/register">
-          <input type="submit" value="Register">
-        </form>
-        <form action="/login">
-         <input type="submit" value="Login">
-        </form>
-         <p>You are not signed in. Please login or Register</p>
-
-      <% } %>
+      <br/><br/>
+      <form action="/urls">
+       <input type="submit" value="Back to Main">
+      </form>
+    <% } else { %>
+      <form action="/register">
+       <input type="submit" value="Register">
+      </form>
+      <form action="/login">
+        <input type="submit" value="Login">
+      </form>
+      <p>You are not signed in. Please login or Register</p>
+    <% } %>
   </body>
 </html>
 
