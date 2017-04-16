@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Paige's TinyApp</title>
+ <% include partials/_header %>
+  <body style="font-size:20px; padding:50px; background-color: lightgrey">
+    <% if(loggedIn) { %>
+      <form action="/logout" method="POST">
+        <input type="submit" value="Logout" >
+      </form>
+      <form action="/urls">
+        <input type="submit" value="My Tinys">
+      </form> <br/><br/>
+      <form action="/urls" method="POST">
+        <label for="longURL"> Please Enter a URL: </label><br/>
+        <input id="longURL" type="text" name="longURL" value="http://www." style="width: 300px">
+        <input type="submit" value="Submit" > <br/>
+       </form>
+        <% } else { %>
+          <form action="/register">
+            <input type="submit" value="Register">
+          </form>
+          <form action="/login">
+            <input type="submit" value="Login">
+          </form>
+        <% }  %>
+        <br/><br/><br/><br/>
+        <form action="/urls">
+          <input type="submit" value="Back to Main">
+        </form>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<title>Paige's TinyApp</title>
+<html lang="en">
+<body style="background-color:lightgrey;">
+<font face="comic-sans" color="grey" size="10">Paige's TinyApp</font><br/>
+<style>
+form { display: inline; }
+</style>
+<% if(loggedIn) { %>
+  <form action="/register">
+    <input type="submit" value="Register">
+  </form>
+  <form action="/login">
+    <input type="submit" value="Login">
+  </form>
+<% } else { %>
+  <form action="/logout" method="POST">
+    <input type="submit" value="Logout" >
+  </form></right>
+<% }  %>
+<br/><br/>
+  <p>We're sorry. You have been redirected here because of an error. Please return to create that link.</p>
+  <form action="/login">
+    <input type="submit" value="Back to Main">
+  </form>
+</body>
+</html>
