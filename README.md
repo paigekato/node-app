@@ -1,5 +1,8 @@
 # Welcome to Paige's TinyApp
 
+TinyApp is a Node based web app modelled after Bit.ly where you are able to take a regular URL and shorten it for social media.
+
+
 TinyApp is a Node based web app modelled after Bit.ly where you are able to take a regular URL and shorten it for social media. Given three days to create app; established RESTful routes, express templates and user authentication.
 
 ## Stack
@@ -34,3 +37,4 @@ TinyApp is a Node based web app modelled after Bit.ly where you are able to take
 </html>
 
 ```
+
